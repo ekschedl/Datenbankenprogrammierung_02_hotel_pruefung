@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="at.campus02.dbp.model.GastAdresse" table="gast_adresse">
+
+        <!-- Primärschlüssel, moderne ID-Generierung -->
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <!-- Eigenschaften -->
+        <property name="land"       column="land"        not-null="true"/>
+        <property name="stadt"      column="stadt"       not-null="true"/>
+        <property name="strasse"    column="strasse"     not-null="true"/>
+        <property name="hausnummer" column="hausnummer"  not-null="true"/>
+        <property name="wohnung"    column="wohnung"/>
+
+    </class>
+
+</hibernate-mapping>
