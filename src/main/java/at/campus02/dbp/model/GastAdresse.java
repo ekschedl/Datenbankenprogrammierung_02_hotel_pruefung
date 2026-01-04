@@ -1,20 +1,41 @@
 package at.campus02.dbp.model;
+/*
+ * Die Klasse GastAdresse ist bewusst OHNE JPA-Annotationen umgesetzt.
+ * Das Mapping erfolgt vollständig über ein Hibernate-XML-Mapping (.hbm.xml).
+ *
+ * Das XML-Mapping definiert:
+ * - die Tabelle (gast_adresse)
+ * - die Spalten (land, stadt, strasse, ...)
+ * - den Primärschlüssel (id)
+ * - Constraints (z. B. NOT NULL)
 
+	Zusammenfassung:
+	* XML = Konfiguration/Annotationen oder XML beschreiben das Mapping /
+	Das Hibernate-XML-Mapping beschreibt, wie diese Klasse in der Datenbank gespeichert wird.
+	* Java-Klasse = Datenmodell, immer Pflicht.
+
+
+ * Vorteil von XML statt Annotationen:
+ * - saubere Trennung von Code und Mapping
+ * - Mapping kann geändert werden, ohne Java-Code anzupassen
+ */
 public class GastAdresse {
 
-    private Long id;
+    private Long id; // Technische ID (Primärschlüssel, im XML definiert)
+
+    // Fachliche Attribute der Adresse
     private String land;
     private String stadt;
     private String strasse;
-    private String hausnummer; //da mit Buchstaben sien können sein
+    private String hausnummer; // Hausnummer als String, da auch Buchstaben möglich sind
     private String wohnung;
 
+    // Leerer Konstruktor (von Hibernate benötigt)
     public GastAdresse() {
-
     };
 
+    // Konstruktor zum Erstellen einer Adresse
     public GastAdresse( String land, String stadt, String strasse, String hausnummer, String wohnung) {
-
         this.land = land;
         this.stadt = stadt;
         this.strasse = strasse;
@@ -22,6 +43,8 @@ public class GastAdresse {
         this.wohnung = wohnung;
     }
 
+    // Getter und Setter
+    // Hibernate greift über Getter/Setter auf die Felder zu
     public Long getId() {
         return id;
     }
@@ -70,6 +93,7 @@ public class GastAdresse {
         this.wohnung = wohnung;
     }
 
+    // String-Darstellung der Adresse
     @Override
     public String toString() {
         return "GastAdresse{" +

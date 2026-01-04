@@ -1,18 +1,28 @@
 <?xml version="1.0"?>
+<!-- XML-Deklaration: legt Version und Format der Datei fest -->
+<!-- Das XML verwendet das klassische Hibernate-DTD.
+     Die IDE markiert einige Attribute rot, da das DTD nicht aufgelöst wird
+     Hibernate selbst verarbeitet das Mapping korrekt.-->
 <!DOCTYPE hibernate-mapping PUBLIC
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    <!-- DTD beschreibt die Struktur der Mapping-Datei -->
 
 <hibernate-mapping>
+    <!-- Wurzelelement der Hibernate-Mapping-Datei -->
 
     <class name="at.campus02.dbp.model.GastAdresse" table="gast_adresse">
+        <!-- Definiert GastAdresse als Entity über XML (ohne @Entity) -->
+        <!-- Zuordnung zur Tabelle gast_adresse -->
 
         <!-- Primärschlüssel, moderne ID-Generierung -->
+        <!-- ID wird von der Datenbank automatisch erzeugt -->
         <id name="id" column="id">
             <generator class="identity"/>
         </id>
 
         <!-- Eigenschaften -->
+        <!-- Pflichtfelde und 1x optional -->
         <property name="land"       column="land"        not-null="true"/>
         <property name="stadt"      column="stadt"       not-null="true"/>
         <property name="strasse"    column="strasse"     not-null="true"/>
@@ -22,3 +32,4 @@
     </class>
 
 </hibernate-mapping>
+

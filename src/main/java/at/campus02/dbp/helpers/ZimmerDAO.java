@@ -7,6 +7,15 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+/*
+Ein Zimmer = eine Buchung
+Mehrere Zimmer → mehrere Buchungen
+
+Ein Gast kann mehrere Zimmer buchen.
+Dies wird durch mehrere Buchungen modelliert, wobei jede Buchung genau ein Zimmer repräsentiert.
+Dadurch bleibt das Modell einfach und gut nachvollziehbar.
+*/
+
 
 public class ZimmerDAO {
 

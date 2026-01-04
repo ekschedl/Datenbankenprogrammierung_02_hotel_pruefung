@@ -1,0 +1,96 @@
+📄 Annotation-Dokumentation
+
+Prüfungsprojekt: Datenbankprogrammierung II – Java & Hibernate
+
+⸻
+
+@Entity
+
+Markiert eine Java-Klasse als persistente Entity.
+In diesem Projekt werden z. B. Gast und Zimmer als Entities verwendet, um deren Objekte in Datenbanktabellen zu speichern.
+
+⸻
+
+@Table
+
+Legt den Namen der Datenbanktabelle fest.
+Damit wird z. B. die Klasse Gast explizit der Tabelle gast zugeordnet.
+
+⸻
+
+@Id
+
+Kennzeichnet das Primärschlüssel-Attribut einer Entity.
+In diesem Projekt wird id als technischer Primärschlüssel verwendet.
+
+⸻
+
+@GeneratedValue
+
+Gibt an, dass der Primärschlüssel automatisch erzeugt wird.
+Mit GenerationType.IDENTITY übernimmt die Datenbank die ID-Generierung.
+
+⸻
+
+@Column
+
+Definiert Eigenschaften einer Datenbankspalte wie Name oder NOT NULL.
+Damit werden fachliche Attribute wie name, preis oder guthaben konfiguriert.
+
+⸻
+
+@OneToOne
+
+Definiert eine 1:1-Beziehung zwischen zwei Entities.
+Im Projekt verbindet diese Annotation Gast mit GastAdresse.
+
+⸻
+
+@JoinColumn
+
+Legt die Fremdschlüssel-Spalte der Beziehung fest.
+Die Spalte adresse_id verbindet die Tabelle gast mit gast_adresse.
+
+⸻
+
+@Enumerated
+
+Bestimmt, wie Enums in der Datenbank gespeichert werden.
+Mit EnumType.STRING wird die Kategorie eines Zimmers als Text gespeichert.
+
+⸻
+
+FetchType.LAZY
+
+Legt fest, dass eine Beziehung erst bei Zugriff geladen wird.
+Im Projekt wird dies verwendet, um unnötige Datenbankzugriffe zu vermeiden.
+
+⸻
+
+CascadeType.ALL
+
+Bewirkt, dass Operationen wie Speichern oder Löschen auf verbundene Entities übertragen werden.
+So wird beim Speichern eines Gastes automatisch auch dessen Adresse gespeichert.
+
+⸻
+
+📄 XML-Mapping-Elemente (Hibernate)
+
+<class>
+
+Definiert eine Java-Klasse als Hibernate-Entity im XML-Mapping.
+Im Projekt wird GastAdresse ausschließlich über XML gemappt.
+
+⸻
+
+<id>
+
+Legt den Primärschlüssel der Entity fest.
+Die ID-Generierung erfolgt über die Datenbank.
+
+⸻
+
+<property>
+
+Ordnet ein Java-Attribut einer Datenbankspalte zu.
+Zusätzlich können Constraints wie not-null definiert werden.

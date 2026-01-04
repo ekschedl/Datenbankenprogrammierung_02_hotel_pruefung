@@ -2,14 +2,15 @@ package at.campus02.dbp.model;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "zimmer")
+@Entity //Markiert die Klasse als JPA-Entity-Hibernate weiß :Diese Klasse soll in der Datenbank gespeichert werden.
+@Table(name = "zimmer") //Legt den Tabellennamen fest, Sauberer, kontrollierter DB-Name
 public class Zimmer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Markiert feld als Primärschlüssel //ein technisches Feld -Dient nur zur eindeutigen Identifikation -nicht Zimmernummer!
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID wird automatisch erzeugt
     @Column(name = "id")
     private Long id;   // muss Long sein!Hibernate + JPA erwarten für Primärschlüssel Wrapper-Typen, NICHT primitive Typen.id hat folgende Zustände:
+
     @Column(name = "nummer", nullable = false)
     private int nummer;
 
@@ -23,7 +24,7 @@ public class Zimmer {
     @Column(name = "ist_frei", nullable = false)
     private boolean istFrei = true;   // Default: jedes Zimmer ist frei
 
-
+    // leerer Konstruktor - Pflicht für Hibernate
     public Zimmer() {
     }
 
@@ -34,6 +35,7 @@ public class Zimmer {
         this.kategorie = kategorie;
     }
 
+    //Hibernate liest & schreibt über Getter/Setter
     public Long getId() {
         return id;
     }
@@ -70,6 +72,7 @@ public class Zimmer {
         this.istFrei = frei;
     }
 
+    // für Debugging, Logging und Ausgabe in Main
     @Override
     public String toString() {
         return "Zimmer{" +

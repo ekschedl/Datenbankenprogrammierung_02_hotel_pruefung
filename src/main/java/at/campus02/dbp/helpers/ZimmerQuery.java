@@ -56,9 +56,9 @@ public class ZimmerQuery {
         }
     }
 
-}
+
 // ---- JOIN zwischen Gast und Zimmer
-   /* public List<Zimmer> findZimmerByGast(Long gastId) {
+   public List<Zimmer> findZimmerByGast(Long gastId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = """
             SELECT b.zimmer
@@ -70,7 +70,7 @@ public class ZimmerQuery {
             return q.getResultList();
         }
     }
+}
 
-*/
 
 
