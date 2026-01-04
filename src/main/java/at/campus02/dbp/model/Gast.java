@@ -66,6 +66,23 @@ public class Gast {
     )
     private List<Buchung> buchungen = new ArrayList<>();
 
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "gast_zusatzleistung",
+            joinColumns = @JoinColumn(name = "gast_id"),
+            inverseJoinColumns = @JoinColumn(name = "zusatzleistung_id")
+    )
+    private List<Zusatzleistung> zusatzleistungen = new ArrayList<>();
+
+    public List<Zusatzleistung> getZusatzleistungen() {
+        return zusatzleistungen;
+    }
+
+    public void addZusatzleistung(Zusatzleistung zl) {
+        zusatzleistungen.add(zl);
+    }
     // Leerer Konstruktor (von JPA benötigt)
     public Gast() {
     }

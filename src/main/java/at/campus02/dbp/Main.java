@@ -4,10 +4,7 @@ import at.campus02.dbp.helpers.*;
 
 import java.time.LocalDate;
 
-import at.campus02.dbp.model.Buchung;
-import at.campus02.dbp.model.Gast;
-import at.campus02.dbp.model.Zimmer;
-import at.campus02.dbp.model.ZimmerKategorie;
+import at.campus02.dbp.model.*;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
@@ -216,7 +213,36 @@ public class Main {
                         )
                 );
 
+        ZusatzleistungDAO zusatzleistungDAO= new ZusatzleistungDAO();
+
+        //  Zusatzleistungen anlegen (einmal)
+        Zusatzleistung fruehstueck = new Zusatzleistung();
+        fruehstueck.setName("Frühstück");
+        fruehstueck.setPreis(15);
+
+        Zusatzleistung parkplatz = new Zusatzleistung();
+        parkplatz.setName("Parkplatz");
+        parkplatz.setPreis(10);
+
+        //jetzt persistieren, einmal ausführen, danach sind sie fix in der DB.
+        zusatzleistungDAO.save(fruehstueck);
+        zusatzleistungDAO.save(parkplatz);
+
+        //Zusatzleistung einem Gast zuweisen (Many-to-Many)
+        ZusatzleistungService zusatzleistungService = new ZusatzleistungService();
+        zusatzleistungService.fuegeZusatzleistungZuGast(
+                1L,                 // Gast-ID
+                fruehstueck.getId() // Zusatzleistung-ID
+        );
+        zusatzleistungService.fuegeZusatzleistungZuGast(
+                1L,
+                parkplatz.getId()
+        );
+        zusatzleistungService.zeigeZusatzleistungen(1L);
+
     }
+
+
 
 
 

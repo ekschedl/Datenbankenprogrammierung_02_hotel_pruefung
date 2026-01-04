@@ -74,6 +74,9 @@ public class GastDAO {
                     .setMaxResults(size)
                     .list();
         }
+
     }
+
+
 
 }

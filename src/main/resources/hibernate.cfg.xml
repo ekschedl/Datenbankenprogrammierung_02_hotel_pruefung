@@ -16,6 +16,7 @@
         <mapping class="at.campus02.dbp.model.Zimmer"/>
         <mapping class="at.campus02.dbp.model.Gast"/>
         <mapping class="at.campus02.dbp.model.Buchung"/>
+        <mapping class="at.campus02.dbp.model.Zusatzleistung"/>
 
         <mapping resource="GastAdresse.hbm.xml"/>
 
