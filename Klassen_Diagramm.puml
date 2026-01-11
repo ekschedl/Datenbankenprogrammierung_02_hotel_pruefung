@@ -1,0 +1,207 @@
+@startuml Klassen_Diagramm
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+package "Model-Klassen" #LightBlue {
+    class Gast {
+        - Long id
+        - String name
+        - String familienname
+        - boolean istStammgast
+        - double guthaben
+        - GastAdresse adresse
+        - List<Buchung> buchungen
+        - List<Zusatzleistung> zusatzleistungen
+        + Gast()
+        + Gast(String, String, boolean, double)
+        + getId() : Long
+        + getName() : String
+        + getFamilienname() : String
+        + isIstStammgast() : boolean
+        + getGuthaben() : double
+        + getAdresse() : GastAdresse
+        + getZusatzleistungen() : List<Zusatzleistung>
+        + addZusatzleistung(Zusatzleistung)
+    }
+    
+    class GastAdresse {
+        - Long id
+        - String land
+        - String stadt
+        - String strasse
+        - String hausnummer
+        - String wohnung
+        + GastAdresse()
+        + GastAdresse(String, String, String, String, String)
+        + getId() : Long
+        + getLand() : String
+        + getStadt() : String
+    }
+    
+    class Buchung {
+        - Long id
+        - LocalDate vonDatum
+        - LocalDate bisDatum
+        - Gast gast
+        - Zimmer zimmer
+        + Buchung()
+        + getId() : Long
+        + getVonDatum() : LocalDate
+        + getBisDatum() : LocalDate
+        + getGast() : Gast
+        + getZimmer() : Zimmer
+    }
+    
+    class Zimmer {
+        - Long id
+        - int nummer
+        - double preis
+        - ZimmerKategorie kategorie
+        - boolean istFrei
+        + Zimmer()
+        + Zimmer(int, double, ZimmerKategorie)
+        + getId() : Long
+        + getNummer() : int
+        + getPreis() : double
+        + getKategorie() : ZimmerKategorie
+        + getIstFrei() : boolean
+    }
+    
+    enum ZimmerKategorie {
+        STANDARD
+        DELUXE
+        SUITE
+    }
+    
+    class Zusatzleistung {
+        - Long id
+        - String name
+        - double preis
+        - List<Gast> gaeste
+        + Zusatzleistung()
+        + Zusatzleistung(String, double)
+        + getId() : Long
+        + getName() : String
+        + getPreis() : double
+        + getGaeste() : List<Gast>
+    }
+}
+
+package "Helper-Klassen" #LightGreen {
+    class HibernateUtil {
+        - static SessionFactory sessionFactory
+        + {static} getSessionFactory() : SessionFactory
+    }
+    
+    package "DAO-Schicht" #LightYellow {
+        class GastDAO {
+            + save(Gast) : Gast
+            + findById(Long) : Gast
+            + findAll() : List<Gast>
+            + update(Gast) : Gast
+            + delete(Gast) : void
+            + deleteById(Long) : void
+            + findAllPaged(int, int) : List<Gast>
+        }
+        
+        class ZimmerDAO {
+            + save(Zimmer) : Zimmer
+            + findById(Long) : Zimmer
+            + update(Zimmer) : Zimmer
+            + delete(Zimmer) : void
+            + deleteById(Long) : void
+            + getAlleZimmer() : List<Zimmer>
+        }
+        
+        class BuchungDAO {
+            + save(Buchung) : Buchung
+        }
+        
+        class ZusatzleistungDAO {
+            + save(Zusatzleistung) : Zusatzleistung
+        }
+    }
+    
+    package "Query-Klassen" #LightCoral {
+        class GastQuery {
+            + zeigeStammgaeste(boolean) : List<Gast>
+            + countStammgaeste() : List<Object[]>
+            + alleGaesteSortiertNachName() : List<Gast>
+            + zeigeGaestePaginiert(int, int) : List<Gast>
+        }
+        
+        class ZimmerQuery {
+            + findByKategorie(ZimmerKategorie) : List<Zimmer>
+            + countZimmerProKategorie() : List<Object[]>
+            + findAllOrderedByPreis(boolean) : List<Zimmer>
+            + findZimmerPage(int, int) : List<Zimmer>
+            + findZimmerByGast(Long) : List<Zimmer>
+        }
+    }
+    
+    package "Service-Schicht" #LightPink {
+        class BuchungService {
+            + gastBuchtZimmer(Long, Long, LocalDate, LocalDate) : void
+        }
+        
+        class ZusatzleistungService {
+            + fuegeZusatzleistungZuGast(Long, Long) : void
+            + zeigeZusatzleistungen(Long) : void
+            + zeigeGaesteZuZusatzleistung(Long) : void
+        }
+    }
+}
+
+class Main {
+    - static SessionFactory sessionFactory
+    + {static} main(String[]) : void
+}
+
+' Model-Beziehungen
+Gast "1" --> "1" GastAdresse : @OneToOne\ncascade=ALL
+Gast "1" --> "*" Buchung : @OneToMany\nmappedBy=gast
+Buchung "*" --> "1" Gast : @ManyToOne
+Buchung "*" --> "1" Zimmer : @ManyToOne
+Gast "*" --> "*" Zusatzleistung : @ManyToMany\nJoinTable
+Zimmer "*" --> "1" ZimmerKategorie : Enum
+
+' Helper-Abhängigkeiten
+GastDAO ..> HibernateUtil : uses
+GastDAO ..> Gast : manages
+GastQuery ..> HibernateUtil : uses
+GastQuery ..> Gast : queries
+
+ZimmerDAO ..> HibernateUtil : uses
+ZimmerDAO ..> Zimmer : manages
+ZimmerQuery ..> HibernateUtil : uses
+ZimmerQuery ..> Zimmer : queries
+ZimmerQuery ..> Buchung : queries
+
+BuchungDAO ..> HibernateUtil : uses
+BuchungDAO ..> Buchung : manages
+BuchungService ..> HibernateUtil : uses
+BuchungService ..> Gast : uses
+BuchungService ..> Zimmer : uses
+BuchungService ..> Buchung : creates
+
+ZusatzleistungDAO ..> HibernateUtil : uses
+ZusatzleistungDAO ..> Zusatzleistung : manages
+ZusatzleistungService ..> HibernateUtil : uses
+ZusatzleistungService ..> Gast : uses
+ZusatzleistungService ..> Zusatzleistung : uses
+
+Main ..> GastDAO : uses
+Main ..> ZimmerDAO : uses
+Main ..> BuchungDAO : uses
+Main ..> BuchungService : uses
+Main ..> ZusatzleistungDAO : uses
+Main ..> ZusatzleistungService : uses
+Main ..> GastQuery : uses
+Main ..> ZimmerQuery : uses
+
+@enduml
+
+
+
+

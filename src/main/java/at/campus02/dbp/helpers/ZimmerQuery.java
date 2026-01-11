@@ -10,12 +10,19 @@ import java.util.List;
 
 public class ZimmerQuery {
 
-    // ---- WHERE + Named Parameter -> Zimmer nach Kategorie: ----
+    // ---- WHERE + Named Parameter -> Zimmer nach bestimmter Kategorie: ----
     public List<Zimmer> findByKategorie(ZimmerKategorie kat) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // HQL arbeitet mit Entitäten, nicht mit Tabellen
             String hql = "FROM Zimmer z WHERE z.kategorie = :kat";
+
+            // Query vorbereiten
             Query<Zimmer> q = session.createQuery(hql, Zimmer.class);
+
+            // Named Parameter setzen
             q.setParameter("kat", kat);
+
+            // Ergebnisliste zurückgeben
             return q.getResultList();
         }
     }
@@ -28,6 +35,7 @@ public class ZimmerQuery {
             FROM Zimmer z
             GROUP BY z.kategorie
         """;
+            // Rückgabe: Object[0] = Kategorie, Object[1] = Anzahl
             return session.createQuery(hql, Object[].class).getResultList();
         }
     }
@@ -41,24 +49,25 @@ public class ZimmerQuery {
         }
     }
 
-    // ---- Pagination - >Erste 5 Zimmer laden:
+    // ---- Pagination - >:
     public List<Zimmer> findZimmerPage(int page, int size) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
             String hql = "FROM Zimmer";
 
             Query<Zimmer> q = session.createQuery(hql, Zimmer.class);
-
-            q.setFirstResult((page - 1) * size);
-            q.setMaxResults(size);
+            // page beginnt logisch bei 1 → DB beginnt bei 0
+            q.setFirstResult((page - 1) * size); // Startposition
+            q.setMaxResults(size);     // Anzahl Datensätze
 
             return q.getResultList();
         }
     }
 
 
-// ---- JOIN zwischen Gast und Zimmer
-   public List<Zimmer> findZimmerByGast(Long gastId) {
+    // JOIN
+    // Gibt alle Zimmer zurück, die ein bestimmter Gast gebucht hat
+    public List<Zimmer> findZimmerByGast(Long gastId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = """
             SELECT b.zimmer

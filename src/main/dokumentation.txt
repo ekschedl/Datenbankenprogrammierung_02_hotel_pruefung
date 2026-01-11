@@ -1,96 +1,121 @@
-📄 Annotation-Dokumentation
+Dokumentation – Verwendete Annotationen & XML-Mappings
 
 Prüfungsprojekt: Datenbankprogrammierung II – Java & Hibernate
 
-⸻
+/****************************************************************************************************************************/
+
+1. Überblick
+
+In diesem Projekt wurde ein Entitätsmodell mit Java und Hibernate umgesetzt.
+Die Konfiguration der Entitäten erfolgt bewusst sowohl über Annotationen als auch über XML-Mapping-Files, um die unterschiedlichen Mapping-Varianten von Hibernate zu demonstrieren.
+
+Der Großteil der Entitäten ist primär über Annotationen konfiguriert, während die Entität GastAdresse vollständig über ein XML-Mapping definiert ist.
+Dadurch wird klar ersichtlich:
+	•	wie Annotationen wirken
+	•	wie XML-Mappings aufgebaut sind
+	•	wie beide Varianten kombiniert werden können
+
+/****************************************************************************************************************************/
+
+2. Verwendete Annotationen
 
 @Entity
 
-Markiert eine Java-Klasse als persistente Entity.
-In diesem Projekt werden z. B. Gast und Zimmer als Entities verwendet, um deren Objekte in Datenbanktabellen zu speichern.
-
-⸻
+Kennzeichnet eine Java-Klasse als persistente Entität, die von Hibernate verwaltet und in einer Datenbanktabelle gespeichert wird.
+Im Projekt wird diese Annotation bei allen Entitäten verwendet, die per Annotation gemappt sind (z. B. Gast, Buchung, Zimmer, Zusatzleistung).
 
 @Table
 
-Legt den Namen der Datenbanktabelle fest.
-Damit wird z. B. die Klasse Gast explizit der Tabelle gast zugeordnet.
-
-⸻
+Definiert den Namen der Datenbanktabelle, die zu einer Entität gehört.
+Im Projekt wird @Table verwendet, um explizite und sprechende Tabellennamen festzulegen (z. B. buchung, zimmer).
 
 @Id
 
-Kennzeichnet das Primärschlüssel-Attribut einer Entity.
-In diesem Projekt wird id als technischer Primärschlüssel verwendet.
-
-⸻
+Kennzeichnet das Primärschlüsselattribut einer Entität.
+Jede Entität im Projekt besitzt einen eindeutigen Primärschlüssel, der für die Identifikation in der Datenbank verwendet wird.
 
 @GeneratedValue
 
-Gibt an, dass der Primärschlüssel automatisch erzeugt wird.
-Mit GenerationType.IDENTITY übernimmt die Datenbank die ID-Generierung.
-
-⸻
+Gibt an, dass der Primärschlüssel automatisch generiert wird.
+Im Projekt wird überwiegend GenerationType.IDENTITY eingesetzt, sodass die ID-Erzeugung durch die Datenbank erfolgt.
 
 @Column
 
-Definiert Eigenschaften einer Datenbankspalte wie Name oder NOT NULL.
-Damit werden fachliche Attribute wie name, preis oder guthaben konfiguriert.
+Definiert Eigenschaften einer Tabellenspalte wie nullable, unique oder den Spaltennamen.
+Diese Annotation wird verwendet, um fachliche Regeln abzubilden,
+ z. B. Pflichtfelder wie Namen oder Datumswerte (nullable = false).
 
-⸻
+/****************************************************************************************************************************/
+
+3. Beziehungen zwischen Entitäten (Associations)
+
+@OneToMany
+
+Beschreibt eine 1:n-Beziehung, bei der eine Entität mit mehreren anderen Entitäten verbunden ist.
+Im Projekt kennt z. B. ein Gast mehrere Buchungen.
+
+@ManyToOne
+
+Beschreibt die n:1-Gegenseite einer Beziehung.
+Im Projekt verweist eine Buchung jeweils auf genau einen Gast und genau ein Zimmer.
+Diese Beziehungen sind als Pflichtbeziehungen modelliert (nullable = false).
 
 @OneToOne
 
-Definiert eine 1:1-Beziehung zwischen zwei Entities.
-Im Projekt verbindet diese Annotation Gast mit GastAdresse.
+Beschreibt eine 1:1-Beziehung zwischen zwei Entitäten.
+Im Projekt wird diese Beziehung zwischen Gast und GastAdresse verwendet,
+wobei ein Gast genau eine Adresse besitzt.
 
-⸻
+@ManyToMany
 
-@JoinColumn
+Beschreibt eine n:m-Beziehung zwischen zwei Entitäten.
+Im Projekt wird diese Annotation für die Beziehung zwischen Gast und Zusatzleistung eingesetzt.
 
-Legt die Fremdschlüssel-Spalte der Beziehung fest.
-Die Spalte adresse_id verbindet die Tabelle gast mit gast_adresse.
+@JoinTable
 
-⸻
+Definiert die Join-Tabelle einer Many-to-Many-Beziehung inklusive der Fremdschlüsselspalten.
+Im Projekt wird die Join-Tabelle gast_zusatzleistung verwendet, um die Beziehung zwischen Gast und Zusatzleistung abzubilden.
 
-@Enumerated
+mappedBy
 
-Bestimmt, wie Enums in der Datenbank gespeichert werden.
-Mit EnumType.STRING wird die Kategorie eines Zimmers als Text gespeichert.
+Kennzeichnet die inverse Seite einer bidirektionalen Beziehung.
+Im Projekt ist Zusatzleistung die inverse Seite der Many-to-Many-Beziehung und verweist mit mappedBy auf das entsprechende Attribut in Gast.
 
-⸻
+/****************************************************************************************************************************/
+
+4. Fetch-Strategien
 
 FetchType.LAZY
 
-Legt fest, dass eine Beziehung erst bei Zugriff geladen wird.
-Im Projekt wird dies verwendet, um unnötige Datenbankzugriffe zu vermeiden.
+Bei Lazy Loading werden verbundene Entitäten erst bei Bedarf aus der Datenbank geladen.
+Im Projekt wird FetchType.LAZY verwendet, um Performance zu optimieren und unnötige Datenbankzugriffe zu vermeiden (z. B. bei ManyToOne-Beziehungen in Buchung).
 
-⸻
+FetchType.EAGER
 
-CascadeType.ALL
+Bei Eager Loading werden verbundene Entitäten sofort gemeinsam mitgeladen.
+Diese Strategie wurde im Projekt nur gezielt verwendet oder per JOIN FETCH demonstriert, um Overfetching zu vermeiden.
 
-Bewirkt, dass Operationen wie Speichern oder Löschen auf verbundene Entities übertragen werden.
-So wird beim Speichern eines Gastes automatisch auch dessen Adresse gespeichert.
+/****************************************************************************************************************************/  
 
-⸻
+5. XML-Mappings
 
-📄 XML-Mapping-Elemente (Hibernate)
+
+GastAdresse.hbm.xml
+
+Die Entität GastAdresse ist vollständig über ein XML-Mapping-File konfiguriert und besitzt keine @Entity-Annotation in der Java-Klasse.
+
+Verwendete XML-Elemente:
+
+<hibernate-mapping>
+Wurzelelement der Hibernate-Mapping-Datei.
 
 <class>
-
-Definiert eine Java-Klasse als Hibernate-Entity im XML-Mapping.
-Im Projekt wird GastAdresse ausschließlich über XML gemappt.
-
-⸻
+Definiert die Entität und ordnet sie einer Datenbanktabelle zu.
 
 <id>
-
-Legt den Primärschlüssel der Entity fest.
-Die ID-Generierung erfolgt über die Datenbank.
-
-⸻
+Beschreibt den Primärschlüssel der Entität inklusive Generierungsstrategie.
 
 <property>
+Definiert fachliche Attribute und deren Spaltenzuordnung sowie Pflichtfelder (not-null="true").
 
-Ordnet ein Java-Attribut einer Datenbankspalte zu.
-Zusätzlich können Constraints wie not-null definiert werden.
+Durch dieses XML-Mapping wird demonstriert, wie Entitäten ohne Annotationen vollständig über XML konfiguriert werden können und wie sich Annotationen und XML-Mappings sinnvoll kombinieren lassen.

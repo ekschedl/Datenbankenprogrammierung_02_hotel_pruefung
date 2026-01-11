@@ -33,19 +33,20 @@ public class Gast {
     // -------------------------------
     // Die Adresse ist in der XML gemappt, also NUR hier die JoinColumn setzen.
     /*
-     * @OneToOne
-     * → Ein Gast hat genau eine Adresse
-     *
-     * fetch = LAZY
-     * → Adresse wird erst geladen, wenn getAdresse() aufgerufen wird
-     * → Wenn fetch NICHT gesetzt wird, ist der JPA-Standard EAGER
-     *
-     * cascade = ALL
-     * → Speichern, Ändern und Löschen von Gast
-     *    wirkt automatisch auch auf die Adresse
-     * → Ohne Cascade müsste die Adresse separat gespeichert werden
-     */    @OneToOne(
-            fetch = FetchType.LAZY,
+     @OneToOne
+      → Ein Gast hat genau eine Adresse
+
+     fetch = LAZY
+      → Adresse wird erst geladen, wenn getAdresse() aufgerufen wird
+      → Wenn fetch NICHT gesetzt wird, ist der JPA-Standard EAGER
+
+     cascade = ALL
+     → Speichern, Ändern und Löschen von Gast
+         wirkt automatisch auch auf die Adresse
+     → Ohne Cascade müsste die Adresse separat gespeichert werden
+     */   
+     @OneToOne(
+            fetch = FetchType.LAZY,  //sonst wäre JPA-Standard @OneToOne  EAGER
             cascade = CascadeType.ALL
     )
     // Fremdschlüssel-Spalte in der Tabelle "gast"
@@ -59,20 +60,18 @@ public class Gast {
     // One-to-Many (ein Gast – viele Buchungen)
     // -------------------------------
     @OneToMany(
-            mappedBy = "gast",          // verweist auf das Feld "gast" in Buchung
-            fetch = FetchType.LAZY ,     // Buchungen werden nur bei Bedarf geladen
-            cascade = CascadeType.ALL
-
+            mappedBy = "gast",          // verweist auf das Feld "gast" in Buchung, kennzeichnet die inverse Seite einer bidirektionalen Beziehung -Buchung besitzt die Beziehung
+            fetch = FetchType.LAZY     // Buchungen werden nur bei Bedarf geladen, explizit gesetzt (entspricht JPA-Standard)
     )
     private List<Buchung> buchungen = new ArrayList<>();
 
 
-
-    @ManyToMany
+    /*Damit ist Gast die Eigentümerseite (owning side) der Many-to-Many-Beziehung, Zusatzleistung ist die inverse Seite (inverse side)  bidirektional: Gast → Zusatzleistung*/
+    @ManyToMany // LAZY  JPA-Standard (EAGER mache nur per JOIN FETCH )
     @JoinTable(
-            name = "gast_zusatzleistung",
-            joinColumns = @JoinColumn(name = "gast_id"),
-            inverseJoinColumns = @JoinColumn(name = "zusatzleistung_id")
+            name = "gast_zusatzleistung", //Name der Join-Tabelle in der Datenbank
+            joinColumns = @JoinColumn(name = "gast_id"), //Fremdschlüssel-Spalte zur eigenen Entität (Gast)
+            inverseJoinColumns = @JoinColumn(name = "zusatzleistung_id") //Fremdschlüssel-Spalte zur inversen Entität (Zusatzleistung)
     )
     private List<Zusatzleistung> zusatzleistungen = new ArrayList<>();
 

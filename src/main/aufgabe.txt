@@ -1,0 +1,141 @@
+Prüfungsprojekt: Datenbankprogrammierung II
+Java & Hibernate (JPA-Grundlagen)
+
+Ziel des Projekts
+Im Rahmen dieses Prüfungsprojekts soll eine kleine, aber in sich stimmige Datenbankanwendung mit Java und Hibernate (JPA) umgesetzt werden.
+
+Das konkrete Domänenmodell (z. B. Bibliothek, Kursverwaltung, Bestellsystem, Fuhrpark, …) soll von Ihnen selbst gewählt werden, muss aber mindestens drei logisch miteinander verbundene Entitäten beinhalten.
+/****************************************************************************************************************************/
+Aufgabe 1 – Modellierung & Mapping
+30 Punkte
+Ziel
+Entitätsmodell aufbauen und per Annotation und XML konfigurieren.
+
+Anforderungen
+Mindestens drei verbundene Entitäten 10 Punkte
+
+Jede Entität:
+ist mit @Entity versehen (bzw. im XML als Entity definiert)
+besitzt einen Primärschlüssel (@Id) und eine technische ID (z. B. Long id mit @GeneratedValue)
+enthält mehrere fachliche Attribute (z. B. name, preis, datum, …)
+Konfiguration über Annotationen und XML-Mapping-Files 10 Punkte
+
+Es soll bewusst beides vorkommen:
+
+Mindestens eine Entität primär über Annotationen konfiguriert
+Mindestens eine Entität wird (zusätzlich oder ausschließlich) über ein XML-Mapping-File konfiguriert (z. B. Tabellenname, Spaltennamen, Beziehungen, @Column, @Table etc. im XML definiert oder überschrieben)
+Wichtig ist, dass klar erkennbar ist:
+
+wie Annotationen wirken
+wie ein Mapping via XML aussieht
+wie sich beides kombinieren/überschreiben lässt
+Dokumentation der verwendeten Annotationen / Properties 10 Punkte
+
+Ein kurzes Dokument (ca. 1–2 Seiten), in dem die wichtigsten verwendeten Annotationen / Elemente stichwortartig erklärt werden, z. B.:
+
+@Entity, @Table, @Id, @GeneratedValue, @Column
+@OneToMany, @ManyToOne, @OneToOne, @ManyToMany
+relevante XML-Tags (z. B. <entity>, <attributes>, <id>, <many-to-one>, …)
+Pro Annotation 1–2 Sätze, wofür sie in diesem Projekt verwendet wird.
+
+/****************************************************************************************************************************/
+
+Aufgabe 2 – CRUD-Operationen inkl. Transaktionen
+20 Punkte
+Ziel
+Grundlegende Datenbankoperationen (Create, Read, Update, Delete) sauber mit JPA/Hibernate und Transaktionen umsetzen.
+
+Anforderungen
+CRUD für mindestens eine „Hauptentität“ (z. B. Kunde, Buch, Kurs) 10 Punkte
+
+Implementieren Sie eine Service- oder DAO-Klasse, die folgende Methoden bereitstellt:
+
+create(...) – Anlegen eines neuen Datensatzes
+findById(...) – Lesen eines Datensatzes per Primärschlüssel
+findAll() – Lesen aller Datensätze
+update(...) – Ändern eines bestehenden Datensatzes
+delete(...) – Löschen eines Datensatzes
+Verwendung von Transaktionen 10 Punkte
+
+Alle Datenbankzugriffe erfolgen in Transaktionen:
+
+Start einer Transaktion vor der Operation
+commit bei Erfolg
+rollback im Fehlerfall (z. B. mit try/catch)
+Dies kann z. B. über einen EntityManager mit getTransaction() oder über einen von Ihnen abstrahierten Transaktions-Helper umgesetzt werden.
+
+Die Funktionsfähigkeit soll durch ein kleines Test- oder Demo-Programm gezeigt werden (z. B. main-Methode oder einfache JUnit-Tests).
+/****************************************************************************************************************************/
+
+Aufgabe 3 – Abfragen mit HQL
+20 Punkte
+Ziel
+Unterschiedliche JPQL-/HQL-Abfragen inkl. Filter, Aggregation und Pagination.
+
+Anforderungen
+Implementieren Sie mindestens vier verschiedene JPQL-/HQL-Abfragen, die zusammen folgende Punkte abdecken:
+
+WHERE + Named Parameter 3 Punkte
+
+Beispiel: Suche nach Entitäten mit bestimmtem Attributwert
+
+SELECT e FROM Entitaet e WHERE e.name = :name
+GROUP BY + Aggregatfunktion 4 Punkte
+
+Beispiel: Anzahl / Summe pro Kategorie
+
+SELECT kategorie, COUNT(e) FROM Entitaet e GROUP BY kategorie
+Alias & Sortierung (ORDER BY) 3 Punkte
+
+Nutzung von Aliassen und Sortierung nach einem Feld.
+
+Pagination (Seitenweise laden) 5 Punkte
+
+Verwendung von setFirstResult(...) und setMaxResults(...), um nur einen Teil der Ergebnisse zu laden (z. B. „erste 10 Datensätze“).
+
+JOINS 5 Punkte
+
+Hinweis:
+Die Abfragen können in einer eigenen Service-/DAO-Klasse oder in einer „Query-Demo“-Klasse implementiert sein. Wichtig ist, dass sie lauffähig sind und bei der Korrektur nachvollzogen werden können.
+
+
+/****************************************************************************************************************************/
+Aufgabe 4 – Associations / Relationships
+30 Punkte
+https://www.baeldung.com/jpa-hibernate-associations
+https://stackabuse.com/a-guide-to-jpa-with-hibernate-relationship-mapping/
+https://docs.hibernate.org/core/3.3/reference/en/html/associations.html
+
+/****************************************************************************************************************************/
+Ziel
+Umsetzung von Entitätsbeziehungen in JPA/Hibernate.
+
+/****************************************************************************************************************************/
+
+Anforderungen
+One-to-Many / Many-to-One 10 Punkte
+
+Mindestens eine Beziehung vom Typ 1:n und die dazugehörige n:1-Seite, z. B.:
+Kunde – Bestellung
+Autor – Buch
+Korrekte Verwendung von @OneToMany / @ManyToOne inkl. mappedBy und Eigentümerseite
+Zeigen Sie den Unterschied zwischen Eager-Loading und Lazy-Loading
+One-to-One 5 Punkte
+
+Eine Beziehung vom Typ 1:1, z. B.:
+Person – PersonDetail
+eine Seite als Eigentümer klar erkennbar
+Many-to-Many (optional, aber empfohlen) 5 Punkte
+
+Mindestens eine @ManyToMany-Beziehung (z. B. Student – Kurs)
+Umsetzung via Join-Tabelle
+Unidirektionale und bidirektionale Beziehungen 10 Punkte
+
+Mindestens eine Beziehung bidirektional modelliert, z. B.:
+Kunde kennt seine Bestellungen und Bestellung kennt ihren Kunden
+Mindestens eine Beziehung unidirektional, z. B.:
+Rechnung kennt Kunde, aber nicht umgekehrt
+Im Demo-/Testcode soll gezeigt werden, dass:
+
+verknüpfte Objekte korrekt gespeichert werden
+Beziehungen beim Einlesen wieder korrekt gefüllt sind (z. B. kunde.getBestellungen())

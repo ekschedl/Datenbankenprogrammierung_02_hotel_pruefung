@@ -1,24 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- XML-Deklaration: Version und Zeichencodierung -->
+
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        <!-- Verwendete Hibernate-Konfigurations-Definition (DTD -Document Type Definition). -->
 
+<!-- Zentrale Hibernate-Konfiguration -->
 <hibernate-configuration>
+    <!-- SessionFactory = zentrale Hibernate-Komponente
+     erstellt Sessions für DB-Zugriffe -->
     <session-factory>
+        <!-- JDBC-Treiber für SQLite,  dieser Treiber 	öffnet die Verbindung zur SQLite-DB, schickt SQL an SQLite, holt Ergebnisse zurück.-->
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
+
+        <!-- die Adresse zur Datenbank: Protokoll/DB-Typ/Datei-->
         <property name="hibernate.connection.url">jdbc:sqlite:hotelprojekt.db</property>
+
+        <!-- Dialekt: sagt Hibernate, wie SQL für SQLite erzeugt werden soll -->
         <property name="hibernate.dialect">org.hibernate.community.dialect.SQLiteDialect</property>
 
+        <!-- Schema-Strategie:
+           update = Tabellen automatisch anpassen, keine Daten löschen -->
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
 
+        <!-- Gibt alle SQL-Befehle in der Konsole aus (Debug / Lernen) -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!--  SQL-Ausgaben: false gesetzt, weil mir das SQL ohne Formatierung übersichtlicher ist.-->
+        <property name="hibernate.format_sql">false</property>
+
+        <!-- Registriert die Entity-Klassen  -->
         <mapping class="at.campus02.dbp.model.Zimmer"/>
         <mapping class="at.campus02.dbp.model.Gast"/>
         <mapping class="at.campus02.dbp.model.Buchung"/>
         <mapping class="at.campus02.dbp.model.Zusatzleistung"/>
 
+        <!-- XML-Mapping-Datei für GastAdresse, nicht per Annotation) -->
         <mapping resource="GastAdresse.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>
+
+
+<!--
+In der hibernate.cfg.xml werden nur Entitäten und Mapping-Dateien registriert.
+Join-Tabellen entstehen automatisch aus den Relationship-Annotationen
+und müssen nicht extra eingetragen werden.
+
+Hibernate-DTD ist eine Regelbeschreibung für XML-Dateien, die sagt:
+•	welche Tags erlaubt sind
+•	in welcher Reihenfolge
+•	welche Attribute erlaubt sind
+
+Hibernate weiß dadurch:
+•	es gibt <hibernate-configuration>
+•	darin <session-factory>
+•	darin <property> und <mapping>
+
+
+JDBC - Java Database Connectivity
+
+!!! Hibernate ist kein Datenbanktreiber
+•	Hibernate benutzt intern JDBC
+JDBC erledigt:
+•	Verbindung zur DB
+•	SQL ausführen
+•	Ergebnisse zurückgeben
+also Hibernate = Komfort-Schicht über JDBC
+-->
+
+
+<!--        hibernate.hbm2ddl.auto legt fest, wie Hibernate das Datenbankschema behandelt.-->
+<!--        •	update: passt Tabellen automatisch an, ohne Daten zu löschen → ideal für Entwicklung & Prüfung-->
+<!--        •	create / create-drop: erstellt Schema neu, Daten gehen verloren-->
+<!--        •	validate: prüft nur, ändert nichts-->
+<!--        •	none: keine Schema-Verwaltung-->
+
+<!--        ➡️ Ich verwende update, damit Schemaänderungen möglich sind, ohne Datenverlust.-->

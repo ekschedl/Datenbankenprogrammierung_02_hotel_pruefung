@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- XML-Deklaration: legt Version und Format der Datei fest -->
-<!-- Das XML verwendet das klassische Hibernate-DTD.
+<!-- Das XML verwendet das klassische Hibernate-DTD (Document Type Definition).
      Die IDE markiert einige Attribute rot, da das DTD nicht aufgelöst wird
      Hibernate selbst verarbeitet das Mapping korrekt.-->
 <!DOCTYPE hibernate-mapping PUBLIC

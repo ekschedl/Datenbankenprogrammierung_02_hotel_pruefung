@@ -20,20 +20,20 @@ public class Buchung {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false)   //Eine Buchung ohne Start- oder Enddatum ergibt fachlich keinen Sinn.
     private LocalDate vonDatum;
 
-    @Column(nullable = false)
+    @Column(nullable = false)   //Eine Buchung ohne Start- oder Enddatum ergibt fachlich keinen Sinn.
     private LocalDate bisDatum;
 
     //Buchung → Gast (n:1)
-    @ManyToOne
-    @JoinColumn(name = "gast_id")
+    @ManyToOne(fetch = FetchType.LAZY)//lädt verbundene Entitäten erst bei Bedarf
+    @JoinColumn(name = "gast_id", nullable = false) //Eine Buchung ohne Gast ergibt fachlich keinen Sinn.
     private Gast gast;
 
     //Buchung → Zimmer (n:1)
-    @ManyToOne
-    @JoinColumn(name = "zimmer_id")
+    @ManyToOne(fetch = FetchType.LAZY)//lädt verbundene Entitäten erst bei Bedarf
+    @JoinColumn(name = "zimmer_id", nullable = false) //Eine Buchung ohne Zimmer ergibt fachlich keinen Sinn.
     private Zimmer zimmer;
 
     // leerer Konstruktor Pflicht für Hibernate
@@ -79,3 +79,17 @@ public class Buchung {
     }
 }
 
+/**
+FetchType.LAZY
+    verbundene Entitäten werden nicht sofort geladen
+    Daten werden erst bei Bedarf nachgeladen
+    bessere Performance
+    wird im Projekt verwendet, um unnötige Datenbankzugriffe zu vermeiden
+
+FetchType.EAGER
+    verbundene Entitäten werden sofort mitgeladen
+    unabhängig davon, ob sie benötigt werden
+    kann zu Performance-Problemen führen
+    wird nur eingesetzt, wenn Daten immer benötigt werden
+
+ */
